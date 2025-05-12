@@ -8,19 +8,19 @@ const CategoryFilter = ({ categories, onCategoryChange }) => {
 
   return (
     <div className="mb-4">
-      <label htmlFor="categoryFilter" className="block text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor="categoryFilter" className="form-label">
         分类筛选
       </label>
       <select
         id="categoryFilter"
-        className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        className="form-select"
         onChange={handleCategoryChange}
         defaultValue="all"
       >
         <option value="all">所有分类</option>
         {categories && categories.map((category, index) => (
-          <option key={index} value={category.category || '未分类'}>
-            {category.category || '未分类'}
+          <option key={index} value={category}>
+            {category || '未分类'}
           </option>
         ))}
       </select>

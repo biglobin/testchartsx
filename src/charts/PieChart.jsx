@@ -1,13 +1,22 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-// 自定义颜色
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#8dd1e1'];
+// 使用主题变量定义的颜色
+const COLORS = [
+  'var(--primary-color)',
+  'var(--secondary-color)',
+  'var(--success-color)',
+  'var(--warning-color)',
+  'var(--primary-light)',
+  'var(--secondary-light)',
+  'var(--primary-dark)',
+  'var(--secondary-dark)'
+];
 
 const TweetCategoryPieChart = ({ data }) => {
   // 确保数据存在且有效
   if (!data || data.length === 0) {
-    return <div className="text-center py-4">暂无分类数据</div>;
+    return <div className="text-center py-8" style={{ color: 'var(--text-tertiary)' }}>暂无分类数据</div>;
   }
 
   // 处理数据，确保每个分类都有名称

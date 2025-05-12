@@ -100,67 +100,66 @@ const Dashboard = () => {
   if (error) return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Twitter数据分析仪表盘</h1>
-      
-      {/* 筛选器区域 */}
-      <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <DateRangeSelector onRangeChange={handleDateRangeChange} />
-          <CategoryFilter categories={categoryData} onCategoryChange={handleCategoryChange} />
-        </div>
-      </div>
-      
-      {/* KPI 卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card title="推文总数" value={stats.totalTweets} />
-        <Card title="平均点赞" value={stats.avgLikes} />
-        <Card title="平均转发" value={stats.avgRetweets} />
-        <Card title="平均浏览" value={stats.avgViews} />
-      </div>
-      
-      {/* 图表区域 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-          <h2 className="text-lg font-semibold mb-4">推文分类分布</h2>
-          {categoryData.length > 0 ? (
-            <TweetCategoryPieChart data={categoryData} />
-          ) : (
-            <div className="text-center py-10 text-gray-500">暂无分类数据</div>
-          )}
+    <div style={{ backgroundColor: 'var(--bg-secondary)', minHeight: '100vh' }}>
+      <div className="container mx-auto px-4 py-8">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Twitter数据分析仪表盘</h1>
+          <p className="mt-2" style={{ color: 'var(--text-tertiary)' }}>实时监控和分析Twitter数据趋势</p>
+        </header>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="card">
+            <div className="card-header">筛选条件</div>
+            <div className="card-body">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <DateRangeSelector onRangeChange={handleDateRangeChange} />
+                </div>
+                <div>
+                  <CategoryFilter onCategoryChange={handleCategoryChange} categories={categoryData.map(cat => cat.name)} />
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="card">
+            <div className="card-header">数据概览</div>
+            <div className="card-body">
+              <p className="mb-2" style={{ color: 'var(--text-tertiary)' }}>当前选择: {dateRange === 'all' ? '全部时间' : dateRange} | {selectedCategory === 'all' ? '全部分类' : selectedCategory}</p>
+              <p style={{ color: 'var(--primary-color)' }}>共分析 <span className="font-bold">{stats.totalTweets}</span> 条推文</p>
+            </div>
+          </div>
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-          <h2 className="text-lg font-semibold mb-4">月度推文数量</h2>
-          {monthlyData.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card title="总推文数" value={stats.totalTweets} icon={icons.totalTweets} />
+          <Card title="平均点赞" value={stats.avgLikes} icon={icons.avgLikes} />
+          <Card title="平均转发" value={stats.avgRetweets} icon={icons.avgRetweets} />
+          <Card title="平均浏览" value={stats.avgViews} icon={icons.avgViews} />
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="chart-container">
+            <h3 className="chart-title">推文分类分布</h3>
+            <TweetCategoryPieChart data={categoryData} />
+          </div>
+          <div className="chart-container">
+            <h3 className="chart-title">月度推文数量</h3>
             <MonthlyTweetsChart data={monthlyData} />
-          ) : (
-            <div className="text-center py-10 text-gray-500">暂无月度数据</div>
-          )}
+          </div>
         </div>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-6">
-        <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-          <h2 className="text-lg font-semibold mb-4">推文互动指标</h2>
-          {Object.keys(engagementData).length > 0 ? (
-            <TweetEngagementChart data={engagementData} />
-          ) : (
-            <div className="text-center py-10 text-gray-500">暂无互动数据</div>
-          )}
+        
+        <div className="chart-container mb-8">
+          <h3 className="chart-title">推文互动情况</h3>
+          <TweetEngagementChart data={engagementData} />
         </div>
-      </div>
-      
-      {/* 热门推文区域 */}
-      <div className="grid grid-cols-1 gap-6 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-          <h2 className="text-lg font-semibold mb-4">热门推文</h2>
-          <TopTweets tweets={topTweets} />
+        
+        <div className="card mb-8">
+          <div className="card-header">热门推文</div>
+          <div className="card-body p-0">
+            <TopTweets tweets={topTweets} />
+          </div>
         </div>
-      </div>
-      
-      <div className="mt-8 text-center text-sm text-gray-500">
-        <p>© {new Date().getFullYear()} Twitter数据分析仪表盘 | 数据更新时间: {new Date().toLocaleString()}</p>
       </div>
     </div>
   );

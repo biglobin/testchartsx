@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const MonthlyTweetsChart = ({ data }) => {
   // 确保数据存在且有效
   if (!data || data.length === 0) {
-    return <div className="text-center py-4">暂无月度数据</div>;
+    return <div className="text-center py-8" style={{ color: 'var(--text-tertiary)' }}>暂无月度数据</div>;
   }
 
   // 处理数据，确保月份格式正确
@@ -23,7 +23,7 @@ const MonthlyTweetsChart = ({ data }) => {
           formatter={(value) => [`${value} 条推文`, '数量']}
           labelFormatter={(month) => `${month} 月`}
         />
-        <Bar dataKey="count" fill="#8884d8" name="推文数量" />
+        <Bar dataKey="count" fill="var(--primary-color)" name="推文数量" />
       </BarChart>
     </ResponsiveContainer>
   );
