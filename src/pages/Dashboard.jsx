@@ -4,6 +4,7 @@ import CustomBarChart from '../charts/BarChart';
 import TweetCategoryPieChart from '../charts/PieChart';
 import TweetEngagementChart from '../charts/EngagementChart';
 import MonthlyTweetsChart from '../charts/MonthlyChart';
+import TweetViewsScatterChart from '../charts/ScatterChart';
 import DateRangeSelector from '../components/DateRangeSelector';
 import CategoryFilter from '../components/CategoryFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -30,6 +31,7 @@ const Dashboard = () => {
   const [monthlyData, setMonthlyData] = useState([]);
   const [engagementData, setEngagementData] = useState({});
   const [topTweets, setTopTweets] = useState([]);
+  const [scatterData, setScatterData] = useState([]);
   const [dateRange, setDateRange] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -80,7 +82,11 @@ const Dashboard = () => {
         const topTweetsResponse = await fetch(`${API_BASE_URL}/tweets/top${queryString}`);
         const topTweetsData = await topTweetsResponse.json();
         
-        if (countData.success && categoriesData.success && monthlyData.success && engagementData.success && topTweetsData.success) {
+        // 获取散点图数据（推文浏览量随时间变化）
+        const scatterResponse = await fetch(`${API_BASE_URL}/tweets/views${queryString}`);
+        const scatterData = await scatterResponse.json();
+        
+        if (countData.success && categoriesData.success && monthlyData.success && engagementData.success && topTweetsData.success && scatterData.success) {
           setStats({
             totalTweets: countData.data.total,
             avgLikes: Math.round(engagementData.data.avg_likes),
@@ -92,6 +98,7 @@ const Dashboard = () => {
           setMonthlyData(monthlyData.data);
           setEngagementData(engagementData.data);
           setTopTweets(topTweetsData.data);
+          setScatterData(scatterData.data);
         }
       } catch (err) {
         console.error('获取数据失败:', err);
@@ -163,6 +170,11 @@ const Dashboard = () => {
         <div className="chart-container mb-8">
           <h3 className="chart-title">推文互动情况</h3>
           <TweetEngagementChart data={engagementData} />
+        </div>
+        
+        <div className="chart-container mb-8">
+          <h3 className="chart-title">推文浏览量趋势</h3>
+          <TweetViewsScatterChart data={scatterData} />
         </div>
         
         <div className="card mb-8">
