@@ -265,6 +265,56 @@ app.get('/api/tweets/top', async (req, res) => {
   }
 });
 
+// 获取推文浏览量随时间变化的数据（用于散点图）
+app.get('/api/tweets/views', async (req, res) => {
+  try {
+    let query = 'SELECT DATE_FORMAT(created_at, "%Y-%m-%d") as date, views_count as views FROM tweets';
+    const params = [];
+    
+    // 添加时间范围筛选
+    if (req.query.dateRange && req.query.dateRange !== 'all') {
+      let dateCondition = '';
+      
+      switch(req.query.dateRange) {
+        case 'last7days':
+          dateCondition = 'created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
+          break;
+        case 'last30days':
+          dateCondition = 'created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)';
+          break;
+        case 'last3months':
+          dateCondition = 'created_at >= DATE_SUB(NOW(), INTERVAL 3 MONTH)';
+          break;
+        case 'last6months':
+          dateCondition = 'created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)';
+          break;
+        case 'lastyear':
+          dateCondition = 'created_at >= DATE_SUB(NOW(), INTERVAL 1 YEAR)';
+          break;
+      }
+      
+      if (dateCondition) {
+        query += ' WHERE ' + dateCondition;
+      }
+    }
+    
+    // 添加分类筛选
+    if (req.query.category && req.query.category !== 'all') {
+      query += query.includes('WHERE') ? ' AND category = ?' : ' WHERE category = ?';
+      params.push(req.query.category);
+    }
+    
+    // 按日期排序
+    query += ' ORDER BY created_at';
+    
+    const [rows] = await pool.query(query, params);
+    res.json({ success: true, data: rows });
+  } catch (error) {
+    console.error('获取推文浏览量数据错误:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`服务器运行在端口 ${PORT}`);
