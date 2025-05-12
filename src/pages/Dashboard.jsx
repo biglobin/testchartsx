@@ -9,6 +9,7 @@ import DateRangeSelector from '../components/DateRangeSelector';
 import CategoryFilter from '../components/CategoryFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TopTweets from '../components/TopTweets';
+import './Dashboard.css';
 
 // 定义图标对象
 const icons = {
@@ -122,31 +123,49 @@ const Dashboard = () => {
           <p className="mt-2" style={{ color: 'var(--text-tertiary)' }}>实时监控和分析Twitter数据趋势</p>
         </header>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="card">
-            <div className="card-header">筛选条件</div>
-            <div className="card-body">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <DateRangeSelector onRangeChange={handleDateRangeChange} />
-                </div>
-                <div>
-                  <CategoryFilter onCategoryChange={handleCategoryChange} categories={categoryData.map(cat => cat.name)} />
-                </div>
+        <div className="mb-8">
+          {/* 筛选条件和数据概览 - 简洁行式布局 */}
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4 p-4 bg-opacity-50 rounded-lg" style={{ backgroundColor: 'var(--bg-primary)' }}>
+
+
+            {/* 筛选条件部分 */}
+            <div className="flex flex-col sm:flex-row gap-4 flex-grow">
+              <div className="min-w-[150px]">
+                <DateRangeSelector onRangeChange={handleDateRangeChange} />
+              </div>
+              <div className="min-w-[150px]">
+                <CategoryFilter onCategoryChange={handleCategoryChange} categories={categoryData.map(cat => cat.name)} />
               </div>
             </div>
-          </div>
-          
-          <div className="card">
-            <div className="card-header">数据概览</div>
-            <div className="card-body">
-              <p className="mb-2" style={{ color: 'var(--text-tertiary)' }}>当前选择: {dateRange === 'all' ? '全部时间' : dateRange} | {selectedCategory === 'all' ? '全部分类' : selectedCategory}</p>
-              <p style={{ color: 'var(--primary-color)' }}>共分析 <span className="font-bold">{stats.totalTweets}</span> 条推文 |  
-                <span><span>总推文数</span><span>{stats.totalTweets}</span><span>{icons.totalTweets}</span></span>
-                <span><span>平均点赞</span><span>{stats.avgLikes}</span><span>{icons.avgLikes}</span></span>
-                <span><span>平均转发</span><span>{stats.avgRetweets}</span><span>{icons.avgRetweets}</span></span>
-                <span><span>平均浏览</span><span>{stats.avgViews}</span><span>{icons.avgViews}</span></span>
+
+            
+            {/* 数据概览部分 */}
+            <div className="flex-grow md:text-right">
+              <p className="text-sm mb-2" style={{ color: 'var(--text-tertiary)' }}>
+                当前选择: {dateRange === 'all' ? '全部时间' : dateRange} | {selectedCategory === 'all' ? '全部分类' : selectedCategory}
               </p>
+              <div className="flex flex-wrap gap-3 mt-2">
+                <div className="stat-item">
+                  <span className="stat-icon">{icons.totalTweets}</span>
+                  <span className="stat-value">{stats.totalTweets}</span>
+                  <span className="stat-label">总推文</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-icon">{icons.avgLikes}</span>
+                  <span className="stat-value">{stats.avgLikes}</span>
+                  <span className="stat-label">平均点赞</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-icon">{icons.avgRetweets}</span>
+                  <span className="stat-value">{stats.avgRetweets}</span>
+                  <span className="stat-label">平均转发</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-icon">{icons.avgViews}</span>
+                  <span className="stat-value">{stats.avgViews}</span>
+                  <span className="stat-label">平均浏览</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
