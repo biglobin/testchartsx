@@ -119,7 +119,7 @@ const Dashboard = () => {
         <Card title="平均浏览" value={stats.avgViews} />
       </div>
       
-      {/* 图表区域 * / }
+      {/* 图表区域 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
           <h2 className="text-lg font-semibold mb-4">推文分类分布</h2>
@@ -150,17 +150,15 @@ const Dashboard = () => {
           )}
         </div>
       </div>
-      */}
       
-      {/* 热门推文区域 * / }
+      {/* 热门推文区域 */}
       <div className="grid grid-cols-1 gap-6 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
           <h2 className="text-lg font-semibold mb-4">热门推文</h2>
           <TopTweets tweets={topTweets} />
         </div>
       </div>
-      */}
-
+      
       <div className="mt-8 text-center text-sm text-gray-500">
         <p>© {new Date().getFullYear()} Twitter数据分析仪表盘 | 数据更新时间: {new Date().toLocaleString()}</p>
       </div>
