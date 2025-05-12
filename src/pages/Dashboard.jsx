@@ -134,42 +134,21 @@ const Dashboard = () => {
             <div className="card-header">数据概览</div>
             <div className="card-body">
               <p className="mb-2" style={{ color: 'var(--text-tertiary)' }}>当前选择: {dateRange === 'all' ? '全部时间' : dateRange} | {selectedCategory === 'all' ? '全部分类' : selectedCategory}</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
-                <div className="flex items-center">
-                  <div className="text-2xl mr-2" style={{ color: 'var(--primary-color)' }}>{icons.totalTweets}</div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: 'var(--text-tertiary)' }}>总推文数</p>
-                    <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{stats.totalTweets}</h2>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <div className="text-2xl mr-2" style={{ color: 'var(--primary-color)' }}>{icons.avgLikes}</div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: 'var(--text-tertiary)' }}>平均点赞</p>
-                    <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{stats.avgLikes}</h2>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <div className="text-2xl mr-2" style={{ color: 'var(--primary-color)' }}>{icons.avgRetweets}</div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: 'var(--text-tertiary)' }}>平均转发</p>
-                    <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{stats.avgRetweets}</h2>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <div className="text-2xl mr-2" style={{ color: 'var(--primary-color)' }}>{icons.avgViews}</div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: 'var(--text-tertiary)' }}>平均浏览</p>
-                    <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{stats.avgViews}</h2>
-                  </div>
-                </div>
-              </div>
+              <p style={{ color: 'var(--primary-color)' }}>共分析 <span className="font-bold">{stats.totalTweets}</span> 条推文 |  
+                <span><span>总推文数</span><span>{stats.totalTweets}</span><span>{icons.totalTweets}</span></span>
+                <span><span>平均点赞</span><span>{stats.avgLikes}</span><span>{icons.avgLikes}</span></span>
+                <span><span>平均转发</span><span>{stats.avgRetweets}</span><span>{icons.avgRetweets}</span></span>
+                <span><span>平均浏览</span><span>{stats.avgViews}</span><span>{icons.avgViews}</span></span>
+              </p>
             </div>
           </div>
         </div>
         
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        </div>
         
+
+        {/* 图表区域 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div className="chart-container">
             <h3 className="chart-title">推文分类分布</h3>
