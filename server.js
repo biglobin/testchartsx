@@ -1,6 +1,7 @@
-const express = require('express');
-const mysql = require('mysql2/promise');
-const cors = require('cors');
+import express from 'express';
+import mysql from 'mysql2/promise';
+import cors from 'cors';
+
 
 const app = express();
 app.use(cors());
@@ -10,8 +11,8 @@ app.use(express.json());
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',     // 替换为您的MySQL用户名
-  password: '',     // 替换为您的MySQL密码
-  database: 'twitter_db' // 替换为您的数据库名
+  password: 'H-s#Pe*XPy[6V2@3',     // 替换为您的MySQL密码
+  database: 'mcpdata' // 替换为您的数据库名
 });
 
 // 测试数据库连接
