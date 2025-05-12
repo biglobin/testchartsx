@@ -9,6 +9,14 @@ import CategoryFilter from '../components/CategoryFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TopTweets from '../components/TopTweets';
 
+// 定义图标对象
+const icons = {
+  totalTweets: '📊',
+  avgLikes: '❤️',
+  avgRetweets: '🔄',
+  avgViews: '👁️'
+};
+
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
