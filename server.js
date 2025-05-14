@@ -268,7 +268,7 @@ app.get('/api/tweets/top', async (req, res) => {
 // 获取推文浏览量随时间变化的数据（用于散点图）
 app.get('/api/tweets/views', async (req, res) => {
   try {
-    let query = 'SELECT DATE_FORMAT(created_at, "%Y-%m-%d") as date, views_count as views FROM tweets';
+    let query = 'SELECT DATE_FORMAT(created_at, "%Y-%m-%d") as date, views_count as views, category, full_text as content FROM tweets';
     const params = [];
     
     // 添加时间范围筛选
@@ -306,7 +306,9 @@ app.get('/api/tweets/views', async (req, res) => {
     
     // 按日期排序
     query += ' ORDER BY created_at';
-    
+    console.error('[/api/tweets/views] query:', query);
+    console.error('[/api/tweets/views] params:', params);
+
     const [rows] = await pool.query(query, params);
     res.json({ success: true, data: rows });
   } catch (error) {

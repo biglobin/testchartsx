@@ -7,7 +7,7 @@ const DateRangeSelector = ({ onRangeChange }) => {
   };
 
   return (
-    <div className="mb-4">
+    <div className="filter-item">
       <label htmlFor="dateRange" className="form-label">
         时间范围
       </label>

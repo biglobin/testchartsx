@@ -7,7 +7,7 @@ const CategoryFilter = ({ categories, onCategoryChange }) => {
   };
 
   return (
-    <div className="mb-4">
+    <div className="filter-item">
       <label htmlFor="categoryFilter" className="form-label">
         分类筛选
       </label>

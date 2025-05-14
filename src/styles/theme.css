@@ -82,3 +82,20 @@
     --border-color: #374151;
   }
 }
+
+/* 手动切换的暗色模式 */
+.dark-mode {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+  
+  --text-primary: #f9fafb;
+  --text-secondary: #e5e7eb;
+  --text-tertiary: #d1d5db;
+  
+  --border-color: #374151;
+  
+  /* 确保图表在暗色模式下可见 */
+  --recharts-tooltip-background: #1f2937;
+  --recharts-tooltip-text: #f9fafb;
+}

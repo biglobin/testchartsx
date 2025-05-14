@@ -5,10 +5,12 @@ import TweetCategoryPieChart from '../charts/PieChart';
 import TweetEngagementChart from '../charts/EngagementChart';
 import MonthlyTweetsChart from '../charts/MonthlyChart';
 import TweetViewsScatterChart from '../charts/ScatterChart';
+import LogTweetViewsScatterChart from '../charts/LogScatterChart';
 import DateRangeSelector from '../components/DateRangeSelector';
 import CategoryFilter from '../components/CategoryFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
 import TopTweets from '../components/TopTweets';
+import ThemeToggle from '../components/ThemeToggle';
 import './Dashboard.css';
 
 // 定义图标对象
@@ -22,6 +24,7 @@ const icons = {
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [stats, setStats] = useState({
     totalTweets: 0,
     avgLikes: 0,
@@ -48,6 +51,34 @@ const Dashboard = () => {
     setSelectedCategory(category);
   };
 
+  // 主题切换功能
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark-mode');
+  };
+
+  // 初始化主题
+  useEffect(() => {
+    // 检查用户之前的主题偏好
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      // 检查系统偏好
+      const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDarkMode) {
+        setIsDarkMode(true);
+        document.documentElement.classList.add('dark-mode');
+      }
+    }
+  }, []);
+
+  // 保存主题偏好
+  useEffect(() => {
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -62,6 +93,9 @@ const Dashboard = () => {
           queryParams.append('category', selectedCategory);
         }
         const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+        //console.log('[Dashboard] queryString:', queryString); 
+        // 未选择时间范围或分类时是空的
+        //queryString: ?dateRange=last3months&category=xxx
         
         // 获取推文总数
         const countResponse = await fetch(`${API_BASE_URL}/tweets/count${queryString}`);
@@ -117,6 +151,7 @@ const Dashboard = () => {
 
   return (
     <div style={{ backgroundColor: 'var(--bg-secondary)', minHeight: '100vh' }}>
+      <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       <div className="container mx-auto px-4 py-8">
         <header className="mb-8">
           <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Twitter数据分析仪表盘</h1>
@@ -124,53 +159,45 @@ const Dashboard = () => {
         </header>
         
         <div className="mb-8">
-          {/* 筛选条件和数据概览 - 简洁行式布局 */}
-          <div className="flex flex-col md:flex-row justify-between items-start gap-4 p-4 bg-opacity-50 rounded-lg" style={{ backgroundColor: 'var(--bg-primary)' }}>
-
-
-            {/* 筛选条件部分 */}
-            <div className="flex flex-col sm:flex-row gap-4 flex-grow">
-              <div className="min-w-[150px]">
-                <DateRangeSelector onRangeChange={handleDateRangeChange} />
-              </div>
-              <div className="min-w-[150px]">
-                <CategoryFilter onCategoryChange={handleCategoryChange} categories={categoryData.map(cat => cat.name)} />
-              </div>
+          {/* 筛选条件和数据概览 - 优化布局 */}
+          <div className="flex flex-row flex-nowrap justify-between items-center gap-4 p-3 bg-opacity-50 rounded-lg shadow-sm overflow-x-auto" style={{ backgroundColor: 'var(--bg-primary)' }}>
+            {/* 筛选条件部分 - 水平排列 */}
+            <div className="filter-item">
+              <DateRangeSelector onRangeChange={handleDateRangeChange} />
+              <CategoryFilter onCategoryChange={handleCategoryChange} categories={categoryData.map(cat => cat.name)} />
             </div>
-
-            
-            {/* 数据概览部分 */}
-            <div className="flex-grow md:text-right">
-              <p className="text-sm mb-2" style={{ color: 'var(--text-tertiary)' }}>
-                当前选择: {dateRange === 'all' ? '全部时间' : dateRange} | {selectedCategory === 'all' ? '全部分类' : selectedCategory}
-              </p>
-              <div className="flex flex-wrap gap-3 mt-2">
-                <div className="stat-item">
-                  <span className="stat-icon">{icons.totalTweets}</span>
-                  <span className="stat-value">{stats.totalTweets}</span>
-                  <span className="stat-label">总推文</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-icon">{icons.avgLikes}</span>
-                  <span className="stat-value">{stats.avgLikes}</span>
-                  <span className="stat-label">平均点赞</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-icon">{icons.avgRetweets}</span>
-                  <span className="stat-value">{stats.avgRetweets}</span>
-                  <span className="stat-label">平均转发</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-icon">{icons.avgViews}</span>
-                  <span className="stat-value">{stats.avgViews}</span>
-                  <span className="stat-label">平均浏览</span>
-                </div>
+            {/* 数据概览部分 - 水平排列 */}
+            <div className="stats-container">
+              <div className="stat-item">
+                <span className="stat-icon">{icons.totalTweets}</span>
+                <span className="stat-value">{stats.totalTweets.toLocaleString()}</span>
+                <span className="stat-label">总推文</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">{icons.avgLikes}</span>
+                <span className="stat-value">{stats.avgLikes.toLocaleString()}</span>
+                <span className="stat-label">平均点赞</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">{icons.avgRetweets}</span>
+                <span className="stat-value">{stats.avgRetweets.toLocaleString()}</span>
+                <span className="stat-label">平均转发</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">{icons.avgViews}</span>
+                <span className="stat-value">{stats.avgViews.toLocaleString()}</span>
+                <span className="stat-label">平均浏览</span>
               </div>
             </div>
           </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+          <p className="text-sm font-medium mb-3 px-1" style={{ color: 'var(--text-secondary)' }}>
+            当前选择: <span className="font-semibold">{dateRange === 'all' ? '全部时间' : dateRange}</span> | <span className="font-semibold">{selectedCategory === 'all' ? '全部分类' : selectedCategory}</span>
+          </p>
+
         </div>
         
 
@@ -194,6 +221,11 @@ const Dashboard = () => {
         <div className="chart-container mb-8">
           <h3 className="chart-title">推文浏览量趋势</h3>
           <TweetViewsScatterChart data={scatterData} />
+        </div>
+        
+        <div className="chart-container mb-8">
+          <h3 className="chart-title">推文浏览量趋势（对数坐标）</h3>
+          <LogTweetViewsScatterChart data={scatterData} />
         </div>
         
         <div className="card mb-8">
